@@ -1,22 +1,54 @@
 import RestaurantCard from "./RestaurantCard";
-import { restaurants } from "../utils/mockData";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import userContext from "../utils/userContext";
+import { useContext } from "react";
 
 function Body() {
-  const [filteredRestaurants, setFilteredRestaurants] = useState(restaurants);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  const [allRestaurants, setAllRestaurants] = useState([]);
 
   const [filters, setFilters] = useState({
     ratings: false,
     fastDelivery: false,
   });
 
+  const userDetails = useContext(userContext);
+
+  useEffect(() => {
+    // API calls --- fetch data from server
+    // If API calls takes time , then component rendering is not impacted
+
+    fetch(
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6909835&lng=77.44527719999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        console.log(
+          data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+            ?.restaurants
+        );
+        setFilteredRestaurants(
+          data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+            ?.restaurants
+        );
+
+        setAllRestaurants(
+          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
+            ?.restaurants
+        );
+      });
+  }, []);
+
   useEffect(() => {
     setFilteredRestaurants(
-      restaurants.filter((restaurant) => {
+      allRestaurants.filter((restaurant) => {
         const { ratings, fastDelivery } = filters;
 
         if (!ratings && !fastDelivery) {
-          return restaurants;
+          console.log("all ", allRestaurants);
+          return allRestaurants;
         } else {
           return ratings && fastDelivery
             ? restaurant.rating >= 4 &&
@@ -38,10 +70,15 @@ function Body() {
 
   return (
     <div className="mx-auto w-5/6">
-      {console.log("Component Return function executed")}
       <h1 className="font-bold p-8 text-xl">
         Restaurants with online food delivery
       </h1>
+
+      <input
+        type="text"
+        className="border border-black m-5"
+        onChange={(e) => userDetails.setUserName(e.target.value)}
+      ></input>
 
       <div
         className={`flex items-center border-2 rounded-lg border-slate-400 ml-8 w-fit ${
@@ -102,9 +139,15 @@ function Body() {
       </div>
 
       <div className="flex flex-wrap">
-        {filteredRestaurants.map((restaurant) => (
-          <RestaurantCard details={restaurant} />
-        ))}
+        {filteredRestaurants.length == 0 ? (
+          <h1>Loading...</h1>
+        ) : (
+          filteredRestaurants.map((res) => (
+            <Link to={`/restaurant/${res.info.id}`}>
+              <RestaurantCard details={res.info} key={res.info.id} />
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );
@@ -124,4 +167,6 @@ export default Body;
 
 //[a , b] ---> code will be executed only when a or b changes
 
-//
+//useEffect ---->  First component is rendered  , then useEffect gets executed.
+// API calls --- may take time
+// Optional Chaining

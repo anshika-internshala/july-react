@@ -19,6 +19,12 @@ function Body() {
     // API calls --- fetch data from server
     // If API calls takes time , then component rendering is not impacted
 
+    fetch("http://localhost:8900/api/restaurants")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+
     fetch(
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6909835&lng=77.44527719999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     )

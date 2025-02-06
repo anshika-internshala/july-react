@@ -9,6 +9,9 @@ function Header() {
 
   const cartItems = useSelector((store) => store.cart.items);
 
+  const length = cartItems.reduce((acc, curr) => {
+    return acc + curr.quantity;
+  }, 0);
   const userInfo = useContext(userContext);
 
   //userInfo.printName();
@@ -41,7 +44,7 @@ function Header() {
         </Link>
         <Link to="/cart">
           <li>Cart</li>
-          {cartItems.length}
+          {length}
         </Link>
       </ul>
     </div>

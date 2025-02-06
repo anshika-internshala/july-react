@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addItem } from "../utils/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem, removeItem } from "../utils/cartSlice";
 
 function RestaurantDetails() {
   const params = useParams();
@@ -9,6 +9,8 @@ function RestaurantDetails() {
 
   const [restaurantMenuItems, setRestaurantMenuItems] = useState([]);
   const [isValidPage, setIsValidPage] = useState(true);
+
+  const cartItems = useSelector((store) => store.cart.items);
 
   useEffect(() => {
     fetchMenuItems();
@@ -25,7 +27,7 @@ function RestaurantDetails() {
       setIsValidPage(false);
     } else {
       console.log(
-        data.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards[2].card.card
+        data.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards[1].card.card
           .itemCards
       );
 
@@ -33,11 +35,29 @@ function RestaurantDetails() {
         data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card
           ?.card?.itemCards
       );
+
+      // const items = restaurantMenuItems.map((item) => {
+      //   return { ...item.card.info, quantity: 0 };
+      // });
+      // setRestaurantMenuItems(items);
     }
   }
 
   function handleAddItem(item) {
+    // const item1 = cartItems.find(
+    //   (item2) => item2.card.info.id === item.card.info.id
+    // );
+    // console.log("item", item1);
+
+    // const item4 = restaurantMenuItems.find(
+    //   (item3) => item3.card.info.id === item.card.info.id
+    // );
+
     dispatch(addItem(item));
+  }
+
+  function handleRemoveItem(item) {
+    dispatch(removeItem(item));
   }
 
   return (
@@ -59,9 +79,18 @@ function RestaurantDetails() {
 
               <button
                 className="border bg-green-300 h-8 relative top-16 right-5"
+                onClick={() => handleRemoveItem(res)}
+              >
+                -
+              </button>
+
+              <span> {0} </span>
+
+              <button
+                className="border bg-green-300 h-8 relative top-16 right-5"
                 onClick={() => handleAddItem(res)}
               >
-                Add +
+                +
               </button>
             </div>
           );

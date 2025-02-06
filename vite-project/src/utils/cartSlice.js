@@ -7,12 +7,33 @@ const cartSlice = createSlice({
   },
   reducers: {
     addItem: (state, action) => {
-      console.log("action", action);
-      console.log(state.items);
-      state.items.push(action.payload);
+      console.log("action", action.payload);
+      let item = state.items.find(
+        (item) => item.card.info.id == action.payload.card.info.id
+      );
+
+      const data = { ...action.payload, quantity: 1 };
+
+      if (!item) {
+        state.items.push(data);
+      } else {
+        item.quantity++;
+      }
     },
     removeItem: (state, action) => {
-      state.items.pop();
+      let item = state.items.find(
+        (item) => item.card.info.id == action.payload.card.info.id
+      );
+
+      item.quantity--;
+
+      if (item.quantity == 0) {
+        const items = state.items.filter(
+          (item) => item.card.info.id != action.payload.card.info.id
+        );
+
+        state.items = items;
+      }
     },
     clearCart: (state, action) => {
       state.items = [];

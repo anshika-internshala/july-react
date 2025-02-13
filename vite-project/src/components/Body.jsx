@@ -19,32 +19,45 @@ function Body() {
     // API calls --- fetch data from server
     // If API calls takes time , then component rendering is not impacted
 
-    fetch("http://localhost:8900/api/restaurants")
+    const accessToken = localStorage.getItem("accessToken");
+
+    console.log(accessToken);
+
+    fetch("https://july-react.onrender.com/api/restaurants", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorisation: `JWT ${accessToken}`,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+
+        setFilteredRestaurants(data);
+        setAllRestaurants(data);
       });
 
-    fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6909835&lng=77.44527719999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        console.log(
-          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
-            ?.restaurants
-        );
-        setFilteredRestaurants(
-          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
-            ?.restaurants
-        );
+    //   fetch(
+    //     "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6909835&lng=77.44527719999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+    //   )
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       console.log(data);
+    //       console.log(
+    //         data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+    //           ?.restaurants
+    //       );
+    //       setFilteredRestaurants(
+    //         data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+    //           ?.restaurants
+    //       );
 
-        setAllRestaurants(
-          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
-            ?.restaurants
-        );
-      });
+    //       setAllRestaurants(
+    //         data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+    //           ?.restaurants
+    //       );
+    //     });
   }, []);
 
   useEffect(() => {
@@ -149,8 +162,8 @@ function Body() {
           <h1>Loading...</h1>
         ) : (
           filteredRestaurants.map((res) => (
-            <Link to={`/restaurant/${res.info.id}`}>
-              <RestaurantCard details={res.info} key={res.info.id} />
+            <Link to={`/restaurant/${res._id}`}>
+              <RestaurantCard details={res} key={res._id} />
             </Link>
           ))
         )}

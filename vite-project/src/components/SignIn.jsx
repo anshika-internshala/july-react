@@ -9,7 +9,7 @@ function SignIn(props) {
   const [isSignUp, setIsSignUp] = useState(true);
 
   function handleRegister() {
-    const response = fetch("http://localhost:8900/api/register", {
+    const response = fetch("https://july-react.onrender.com/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ function SignIn(props) {
   }
 
   function handleLogin() {
-    const response = fetch("http://localhost:8900/api/login", {
+    const response = fetch("https://july-react.onrender.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

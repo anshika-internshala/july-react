@@ -32,11 +32,11 @@ function Body() {
       .then((data) => {
         console.log(data);
         console.log(
-          data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
             ?.restaurants
         );
         setFilteredRestaurants(
-          data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+          data?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
             ?.restaurants
         );
 

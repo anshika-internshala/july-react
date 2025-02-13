@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import userContext from "../utils/userContext";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { useSelector } from "react-redux";
+import SignIn from "./SignIn";
 
 function Header() {
   const onlineStatus = useOnlineStatus();
@@ -13,6 +14,15 @@ function Header() {
     return acc + curr.quantity;
   }, 0);
   const userInfo = useContext(userContext);
+  const [isVisible, setIsVisible] = useState(false);
+
+  function openModal() {
+    setIsVisible(true);
+  }
+
+  function closeModal() {
+    setIsVisible(false);
+  }
 
   //userInfo.printName();
 
@@ -39,14 +49,16 @@ function Header() {
         <Link to="/help">
           <li>Help</li>
         </Link>
-        <Link to="/signIn">
+        {/* <Link to="/signIn">
           <li>SignIn</li>
-        </Link>
+        </Link> */}
+        <Link onClick={openModal}>SignIn</Link>
         <Link to="/cart">
           <li>Cart</li>
           {length}
         </Link>
       </ul>
+      <SignIn isVisible={isVisible} onClose={closeModal}></SignIn>
     </div>
   );
 }

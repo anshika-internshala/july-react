@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import routes from "./routes/restaurants.routes.js";
 import userRoutes from "./routes/users.routes.js";
+import cors from "cors";
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.listen(8900, () => {
 // Built in middlewares
 app.use(express.json());
 // App level middlewares
+
+app.use(cors());
 
 function logRequest(req, res, next) {
   console.log("request", req.body);
